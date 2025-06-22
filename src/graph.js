@@ -62,32 +62,23 @@ export function createGraph(containerId, data) {
     Graph.graphData({ nodes, links })
 
         // Custom node rendering with SpriteText
-        .nodeThreeObject(node => {
-            const sprite = new SpriteText(node.name || node.id);
-            sprite.material.depthWrite = false;
-            sprite.color = node.color;
+    Graph.nodeThreeObject(node => {
+        const sprite = new SpriteText(node.name || node.id);
+        sprite.material.depthWrite = false;
+        sprite.color = node.color;
 
-            switch (node.type) {
-                case 'label':
-                    sprite.textHeight = 60;
-                    break;
-                case 'sublabel':
-                    sprite.textHeight = 30;
-                    break;
-                default:
-                    sprite.textHeight = 10;
-            }
-            return sprite;
-        })
-
-        // Tooltip on hover
-        .nodeLabel(node => `${node.type}: ${node.name || node.id}`)
-
-        // Link color matches source node color
-        .linkColor(link => link.source.color)
-
-        // Node repulsion strength
-        .d3Force('charge').strength(-50);
+        switch (node.type) {
+            case 'label':
+                sprite.textHeight = 60;
+                break;
+            case 'sublabel':
+                sprite.textHeight = 30;
+                break;
+            default:
+                sprite.textHeight = 10;
+        }
+        return sprite;
+    })
 
     // Custom link distances
     Graph.d3Force('link').distance(link => {
@@ -112,7 +103,20 @@ export function createGraph(containerId, data) {
         }
 
         return 30;
-    });
+    })
+
+    // Tooltip on hover
+    Graph.nodeLabel(node => `${node.type}: ${node.name || node.id}`)
+
+    // Link color matches source node color
+    Graph.linkColor(link => link.source.color)
+
+    // Node repulsion strength
+    Graph.d3Force('charge').strength(-50)
+
+    // turn off user interaction
+    Graph.enableNavigationControls(false)
+        .enableNodeDrag(false);
 
     return Graph;
 }

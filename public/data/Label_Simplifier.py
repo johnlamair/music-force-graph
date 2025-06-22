@@ -3,7 +3,6 @@
 import json
 import os
 
-
 def convert_to_node_link(json_data, log_path="malformed_entries.log"):
     """Converts JSON to a node-link structure for visualization.
 
