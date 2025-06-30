@@ -28,7 +28,6 @@ const labelColorMap = {
  * @returns {object} The ForceGraph3D instance.
  */
 export function createGraph(containerId, data) {
-    const Graph = ForceGraph3D()(document.getElementById(containerId));
 
     // Filter and normalize nodes
     const validTypes = new Set(['artist', 'label', 'sublabel']);
@@ -58,10 +57,9 @@ export function createGraph(containerId, data) {
             target: nodeMap[link.target]
         }));
 
-    // Load data
-    Graph.graphData({ nodes, links })
+    const Graph = ForceGraph3D()(document.getElementById(containerId));
 
-        // Custom node rendering with SpriteText
+    // Custom node rendering with SpriteText
     Graph.nodeThreeObject(node => {
         const sprite = new SpriteText(node.name || node.id);
         sprite.material.depthWrite = false;
@@ -90,14 +88,10 @@ export function createGraph(containerId, data) {
         if ((src.name === 'Other Labels' && tgt.type === 'sublabel') ||
             (tgt.name === 'Other Labels' && src.type === 'sublabel')) {
             return 10;
-        }
-
-        if ((src.type === 'sublabel' && tgt.type === 'label') ||
+        } else if ((src.type === 'sublabel' && tgt.type === 'label') ||
             (tgt.type === 'sublabel' && src.type === 'label')) {
             return 25;
-        }
-
-        if ((src.type === 'artist' && tgt.type === 'sublabel') ||
+        } else if ((src.type === 'artist' && tgt.type === 'sublabel') ||
             (tgt.type === 'artist' && src.type === 'sublabel')) {
             return 350;
         }
@@ -114,9 +108,15 @@ export function createGraph(containerId, data) {
     // Node repulsion strength
     Graph.d3Force('charge').strength(-50)
 
+    const distance = 3000;
+
     // turn off user interaction
     Graph.enableNavigationControls(false)
-        .enableNodeDrag(false);
+        .enableNodeDrag(false)
+        .showNavInfo(false)
+
+    // Load data
+    Graph.graphData({ nodes, links })
 
     return Graph;
 }

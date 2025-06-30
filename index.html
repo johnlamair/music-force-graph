@@ -2,15 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>3D Force Graph</title>
+  <title>Graph Scroll</title>
   <style>
-    body { margin: 0; }
-    #3d-graph { width: 100vw; height: 100vh; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden; /* we disable normal scrolling */
+    }
+    #3d-graph {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+    #scroll-space {
+      height: 5000px; /* fake space */
+    }
   </style>
 </head>
 <body>
-  <!-- Graph container -->
-  <div id="3d-graph"></div>
-  <script type="module" src="src/main.js"></script>
+<div id="3d-graph"></div>
+<div id="scroll-space"></div>
+<script type="module" src="src/main.js"></script>
 </body>
 </html>
