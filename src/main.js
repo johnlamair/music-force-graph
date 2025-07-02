@@ -11,54 +11,65 @@ fetch('/data/Simplified_OctavateGraph.json')
     .then(res => res.json())
     .then(data => {
         graph = createGraph('3d-graph', data);
-        graph.d3Force('center', d3.forceCenter(0, 0, 0));
         animateCamera();
     });
 
 /**
  * Handles the wheel scroll event to update scroll progress,
  * which controls camera movement around the graph.
- *
- * @param {!WheelEvent} event The wheel scroll event.
  */
 window.addEventListener('wheel', (event) => {
     scrollProgress += event.deltaY * 0.0002;
 
-    // Clamp scrollProgress between 0 and 1
+    // Clamp between 0 and 1
     scrollProgress = Math.max(0, Math.min(1, scrollProgress));
-
-    console.log(`Scroll progress (t): ${scrollProgress.toFixed(3)}`);
 
     animateCamera();
 });
 
 /**
  * Animates the camera position based on the current scroll progress.
- * Moves the camera along a circular path around the graph center,
- * and slightly up/down to create a dynamic view.
+ * Moves the camera through three phases:
+ * 1. Raise up from below
+ * 2. Zoom in while rotating
+ * 3. Zoom back out rotating opposite
  */
 function animateCamera() {
     if (!graph) return;
 
     const t = scrollProgress;
-    const radius = 2000;
-    const angle = t * 2 * Math.PI;
-    const x = radius * Math.cos(angle);
-    const z = radius * Math.sin(angle);
-    const y = 500 * Math.sin(t * Math.PI);
 
-    console.log(`--- Animate Camera ---`);
-    console.log(`t: ${t.toFixed(3)}, angle: ${angle.toFixed(3)} rad`);
-    console.log(`Camera position: x=${x.toFixed(1)}, y=${y.toFixed(1)}, z=${z.toFixed(1)}`);
+    let radius, angle, x, y, z;
 
+    if (t < 0.2) {
+        radius = 2000;
+        angle = 0;
+        x = radius;
+        z = 0;
+        y = -1000 + 1000 * (t / 0.2);
+
+    } else if (t < 0.5) {
+        const localT = (t - 0.2) / 0.3;
+        radius = 2000 - 1500 * localT;
+        angle = localT * Math.PI;
+        x = radius * Math.cos(angle);
+        z = radius * Math.sin(angle);
+        y = 200 * Math.sin(localT * Math.PI * 2);
+
+    } else {
+        const localT = (t - 0.5) / 0.5;
+        radius = 500 + 1500 * localT;
+        angle = Math.PI - localT * Math.PI;
+        x = radius * Math.cos(angle);
+        z = radius * Math.sin(angle);
+        y = 200 * Math.sin(localT * Math.PI * 2);
+    }
+
+    // Ensure camera is locked to calculated position
     const camera = graph.camera();
     const controls = graph.controls();
 
     camera.position.set(x, y, z);
-    console.log(`Camera THREE position:`, camera.position);
-
     controls.target.set(0, 0, 0);
-    console.log(`Controls target:`, controls.target);
-
     controls.update();
 }
