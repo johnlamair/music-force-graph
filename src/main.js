@@ -65,7 +65,7 @@ function animateCamera() {
         y = 200 * Math.sin(localT * Math.PI * 2);
     }
 
-    // Ensure camera is locked to calculated position
+    // Ensure camera is locked to the calculated position
     const camera = graph.camera();
     const controls = graph.controls();
 

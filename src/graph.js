@@ -18,12 +18,12 @@ const labelColorMap = {
     "Warner Music Group": "#e74c3c",              // Red
     "Sony Music Entertainment": "#3498db",        // Blue
     "Universal Music Group": "#f1c40f",           // Yellow
-    "Other Labels": "#bdc3c7"                      // Grey (fallback group)
+    "Other Labels": "#bdc3c7"                      // Grey
 };
 
 /**
  * Creates and configures a 3d-force-graph instance inside the container with given data.
- * @param {string} containerId The id of the container element.
+ * @param {string} containerId The ID of the container element.
  * @param {object} data The raw graph data.
  * @returns {object} The ForceGraph3D instance.
  */
@@ -37,7 +37,7 @@ export function createGraph(containerId, data) {
             return {
                 ...node,
                 label: normLabel,
-                color: labelColorMap[node.label] || "#95a5a6" // Gray fallback color
+                color: labelColorMap[node.label] || "#95a5a6"
             };
         })
         .filter(node =>
@@ -107,8 +107,6 @@ export function createGraph(containerId, data) {
 
     // Node repulsion strength
     Graph.d3Force('charge').strength(-50)
-
-    const distance = 3000;
 
     // turn off user interaction
     Graph.enableNavigationControls(false)
