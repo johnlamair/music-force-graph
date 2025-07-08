@@ -61,4 +61,14 @@ function animateCamera() {
     camera.position.set(x, y, z);
     controls.target.set(0, targetY, 0);
     controls.update();
+
+
+    // Animate the title
+    const title = document.getElementById('big-title');
+    if (title) {
+        // Move up and fade out from t=0 to t=0.2
+        const phaseProgress = Math.min(t / 0.2, 1);
+        title.style.transform = `translate(-50%, calc(-50% - ${phaseProgress * 300}px))`;
+        title.style.opacity = `${1 - phaseProgress * 2}`;
+    }
 }

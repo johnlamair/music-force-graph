@@ -3,26 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <title>Octavate Force Graph</title>
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      overflow: hidden; /* disable normal scrolling */
-    }
-    #3d-graph {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-    }
-    #scroll-space {
-      height: 5000px; /* fake space */
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="3d-graph"></div>
+<div id="big-title">Octavate</div>
 <div id="scroll-space"></div>
 <script type="module" src="src/main.js"></script>
 </body>

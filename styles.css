@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+#3d-graph {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+
+#scroll-space {
+    height: 5000px; /* simulate scroll */
+}
+
+#big-title {
+    position: fixed;
+    top: 25%; /* moved up */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    background: linear-gradient(90deg, #e74c3c, #3498db, #f1c40f);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientMove 4s ease infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
