@@ -3,10 +3,7 @@ import { createGraph } from './graph.js';
 let graph;
 let scrollProgress = 0;
 
-/**
- * Loads the graph data from JSON and creates the 3D force-directed graph.
- * Sets the initial camera position after graph is created.
- */
+// Load graph data and initialize
 fetch('/data/Simplified_OctavateGraph.json')
     .then(res => res.json())
     .then(data => {
@@ -14,62 +11,54 @@ fetch('/data/Simplified_OctavateGraph.json')
         animateCamera();
     });
 
-/**
- * Handles the wheel scroll event to update scroll progress,
- * which controls camera movement around the graph.
- */
+// Update scroll progress and animate on wheel scroll
 window.addEventListener('wheel', (event) => {
     scrollProgress += event.deltaY * 0.0002;
-
-    // Clamp between 0 and 1
-    scrollProgress = Math.max(0, Math.min(1, scrollProgress));
-
+    scrollProgress = Math.max(0, Math.min(1, scrollProgress)); // clamp between 0 and 1
     animateCamera();
 });
 
-/**
- * Animates the camera position based on the current scroll progress.
- * Moves the camera through three phases:
- * 1. Raise up from below
- * 2. Zoom in while rotating
- * 3. Zoom back out rotating opposite
- */
 function animateCamera() {
     if (!graph) return;
 
     const t = scrollProgress;
-
     let radius, angle, x, y, z;
+    let targetY;
 
     if (t < 0.2) {
+        // PHASE 1: Slide down from above, keeping camera looking downward
         radius = 2000;
-        angle = 0;
         x = radius;
         z = 0;
-        y = -1000 + 1000 * (t / 0.2);
+        y = 1500 - 1500 * (t / 0.2); // y moves from 1500 -> 0
+        targetY = y;
 
     } else if (t < 0.5) {
+        // PHASE 2: Zoom in while rotating
         const localT = (t - 0.2) / 0.3;
-        radius = 2000 - 1500 * localT;
-        angle = localT * Math.PI;
+        radius = 2000 - 1500 * localT; // radius from 2000 -> 500
+        angle = localT * Math.PI;      // rotate 0 -> PI
         x = radius * Math.cos(angle);
         z = radius * Math.sin(angle);
         y = 200 * Math.sin(localT * Math.PI * 2);
+        targetY = 0;
 
     } else {
+        // PHASE 3: Zoom back out while rotating opposite direction
         const localT = (t - 0.5) / 0.5;
-        radius = 500 + 1500 * localT;
-        angle = Math.PI - localT * Math.PI;
+        radius = 500 + 1500 * localT;      // radius 500 -> 2000
+        angle = Math.PI - localT * Math.PI; // rotate PI -> 0
         x = radius * Math.cos(angle);
         z = radius * Math.sin(angle);
         y = 200 * Math.sin(localT * Math.PI * 2);
+        targetY = 0;
     }
 
-    // Ensure camera is locked to the calculated position
+    // Update camera position and where it's looking
     const camera = graph.camera();
     const controls = graph.controls();
 
     camera.position.set(x, y, z);
-    controls.target.set(0, 0, 0);
+    controls.target.set(0, targetY, 0);
     controls.update();
 }
