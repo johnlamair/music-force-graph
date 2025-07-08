@@ -26,7 +26,7 @@ function animateCamera() {
     let targetY;
 
     if (t < 0.2) {
-        // PHASE 1: Slide down from above, keeping camera looking downward
+        // PHASE 1: Slide down from above, keeping the camera looking downward
         radius = 2000;
         x = radius;
         z = 0;
@@ -44,7 +44,7 @@ function animateCamera() {
         targetY = 0;
 
     } else {
-        // PHASE 3: Zoom back out while rotating opposite direction
+        // PHASE 3: Zoom back out while rotating in the opposite direction
         const localT = (t - 0.5) / 0.5;
         radius = 500 + 1500 * localT;      // radius 500 -> 2000
         angle = Math.PI - localT * Math.PI; // rotate PI -> 0
