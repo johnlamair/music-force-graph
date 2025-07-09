@@ -1,7 +1,14 @@
-body {
+:root {
+    --primary-color: #e74c3c;
+    --secondary-color: #3498db;
+    --accent-color: #f1c40f;
+}
+
+html, body {
     margin: 0;
     height: 100%;
     overflow: hidden;
+    background-color: black;
 }
 
 #3d-graph {
@@ -26,7 +33,7 @@ body {
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 5px;
-    background: linear-gradient(90deg, #e74c3c, #3498db, #f1c40f);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
