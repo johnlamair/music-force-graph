@@ -3,15 +3,18 @@ import { createGraph } from './graph.js';
 let graph;
 let scrollProgress = 0;
 
-/**
- * Loads the graph data and initializes the 3D graph.
- * Sets initial camera position.
- */
+// Fetch JSON from public folder and create graph
 fetch('/data/Simplified_OctavateGraph.json')
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+    })
     .then(data => {
         graph = createGraph('3d-graph', data);
         animateCamera();
+    })
+    .catch(err => {
+        console.error('Failed to load graph data:', err);
     });
 
 /**
