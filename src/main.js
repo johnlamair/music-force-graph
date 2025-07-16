@@ -4,7 +4,7 @@ let graph;
 let scrollProgress = 0;
 
 // Fetch JSON from public folder and create graph
-fetch('/data/Simplified_OctavateGraph.json')
+fetch('/data/Simplified_OctavateGraph-1.json')
     .then(res => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();

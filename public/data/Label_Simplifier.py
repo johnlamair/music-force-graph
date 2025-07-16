@@ -48,14 +48,6 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
             artist_id,
             "artist",
             name=artist_name,
-            pageURL=artist.get("artistPageURL"),
-            Instagram=artist.get("Instagram"),
-            TikTok=artist.get("TikTok"),
-            YouTube=artist.get("YouTube"),
-            Twitter=artist.get("Twitter"),
-            Facebook=artist.get("Facebook"),
-            totalFollowers=artist.get("totalFollowers"),
-            genres=artist.get("genres", []),
             label=label,
             sublabel=sublabel
         )
@@ -63,7 +55,6 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
 
         for track in artist.get("topTracks", []):
             song = track.get("song", {})
-            album = track.get("album", {})
             song_name = song.get("songName")
 
             if not song_name:
@@ -75,18 +66,6 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
                 continue
 
             song_id = f"{artist_id}::{song_name}"
-            add_node(
-                song_id,
-                "song",
-                songName=song_name,
-                popularity=song.get("songPopularity"),
-                duration=song.get("songDuration"),
-                explicit=song.get("songExplicit"),
-                albumName=album.get("albumName"),
-                albumReleaseDate=album.get("albumReleaseDate"),
-                albumTotalTracks=album.get("albumTotalTracks")
-            )
-            add_link(artist_id, song_id, label=label)
 
             for collaborator in song.get("songCollaborators", []):
                 if collaborator != artist_name:
@@ -130,11 +109,10 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
 def main():
     """Loads input JSON, processes it, and writes node-link and log files."""
     input_path = (
-        "/Users/johnlamair/Documents/Octavate/3d-music-industry-vis/"
-        "Complete_OctavateArtistsList.json"
+        "/Users/johnlamair/IdeaProjects/music-force-graph/public/data/Complete_OctavateArtistsList.json"
     )
     output_path = os.path.join(
-        os.path.dirname(input_path), "Simplified_OctavateGraph.json"
+        os.path.dirname(input_path), "Simplified_OctavateGraph-reduced.json"
     )
     log_path = os.path.join(
         os.path.dirname(input_path), "malformed_entries.log"
