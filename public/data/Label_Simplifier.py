@@ -1,7 +1,14 @@
-"""Convert nested label/sublabel/artist JSON to a node-link graph with labeled edges."""
-
 import json
 import os
+
+def normalize_label(label):
+    """Normalize label names by trimming and lowercasing.
+    Return 'unknown' for invalid or unrecognized labels.
+    """
+    if not label or not isinstance(label, str):
+        return "unknown"
+    clean = label.strip().lower()
+    return "unknown" if clean == "unkown" else clean
 
 def convert_to_node_link(json_data, log_path="malformed_entries.log"):
     """Converts JSON to a node-link structure for visualization.
@@ -35,6 +42,10 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
         links.append(link)
 
     def process_artist(artist, parent_id, label=None, sublabel=None):
+        # Skip artist if parent label is unknown
+        if label == "unknown":
+            return
+
         artist_name = artist.get("artistName") or artist.get("name")
         if not artist_name:
             malformed_entries.append({
@@ -72,25 +83,35 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
                     add_node(collaborator, "collaborator", name=collaborator)
                     add_link(song_id, collaborator, label=label)
 
-    for label, contents in json_data.items():
-        # Label node with label attribute storing its own name
-        add_node(label, "label", label=label)
+    for raw_label, contents in json_data.items():
+        processed_label = normalize_label(raw_label)
+
+        # Skip entire label if it's unknown
+        if processed_label == "unknown":
+            continue
+
+        add_node(processed_label, "label", label=processed_label)
 
         if isinstance(contents, list):
-            # Artists directly under label
             for artist in contents:
-                process_artist(artist, parent_id=label, label=label)
+                process_artist(artist, parent_id=processed_label, label=processed_label)
 
         elif isinstance(contents, dict):
-            # Sublabels under label, store parent label in sublabel node
-            for sublabel, artists in contents.items():
-                add_node(sublabel, "sublabel", label=label)
-                add_link(label, sublabel, label=label)
+            for raw_sublabel, artists in contents.items():
+                sublabel = normalize_label(raw_sublabel)
+
+                # Skip sublabel if parent label or sublabel itself is unknown
+                if sublabel == "unknown" or processed_label == "unknown":
+                    continue
+
+                add_node(sublabel, "sublabel", label=processed_label)
+                add_link(processed_label, sublabel, label=processed_label)
+
                 for artist in artists:
                     process_artist(
                         artist,
                         parent_id=sublabel,
-                        label=label,
+                        label=processed_label,
                         sublabel=sublabel
                     )
 
@@ -104,7 +125,6 @@ def convert_to_node_link(json_data, log_path="malformed_entries.log"):
         "nodes": list(nodes.values()),
         "links": links
     }
-
 
 def main():
     """Loads input JSON, processes it, and writes node-link and log files."""
@@ -125,7 +145,6 @@ def main():
 
     with open(output_path, "w", encoding="utf-8") as outfile:
         json.dump(result, outfile, indent=2)
-
 
 if __name__ == "__main__":
     main()

@@ -1,24 +1,12 @@
 import ForceGraph3D from '3d-force-graph';
 import SpriteText from 'three-spritetext';
 
-/**
- * Normalize label names by trimming and lowercasing.
- * Return 'unknown' for invalid or unrecognized labels.
- * @param {string} label
- * @return {string}
- */
-const normalizeLabel = label => {
-    if (!label || typeof label !== 'string') return 'unknown';
-    const clean = label.trim().toLowerCase();
-    return clean === 'unkown' ? 'unknown' : label;
-};
-
 // Define colors for known labels
 const labelColorMap = {
-    "Warner Music Group": "#e74c3c",       // Red
-    "Sony Music Entertainment": "#3498db", // Blue
-    "Universal Music Group": "#f1c40f",    // Yellow
-    "Other Labels": "#bdc3c7"               // Grey
+    "warner music group": "#e74c3c",       // Red
+    "sony music entertainment": "#3498db", // Blue
+    "universal music group": "#f1c40f",    // Yellow
+    "other labels": "#bdc3c7"               // Grey
 };
 
 /**
@@ -30,17 +18,16 @@ const labelColorMap = {
 export function createGraph(containerId, data) {
     const validTypes = new Set(['artist', 'label', 'sublabel']);
 
-    // Normalize and filter nodes
     const nodes = data.nodes
         .map(node => {
-            const normLabel = normalizeLabel(node.label);
+            const normLabel = node.label;
             return {
                 ...node,
                 label: normLabel,
                 color: labelColorMap[node.label] || "#95a5a6"
             };
         })
-        .filter(node => validTypes.has(node.type) && node.label !== 'unknown');
+        .filter(node => validTypes.has(node.type));
 
     // Map node IDs to nodes for quick reference
     const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
