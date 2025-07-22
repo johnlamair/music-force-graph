@@ -27,52 +27,80 @@ window.addEventListener('wheel', (event) => {
     animateTitle();
 });
 
-/**
- * Moves the camera through three phases:
- * 1. Slide up from below
- * 2. Zoom in while rotating
- * 3. Zoom back out while rotating back
- */
-function animateCamera() {
-    if (!graph) return;
+let cameraAnimationDone = false; // Global flag
 
-    const t = scrollProgress;
+function animateCamera() {
+    if (!graph || cameraAnimationDone) return;
+
+    const t = scrollProgress; // from 0 to 1
 
     let radius, angle, x, y, z, targetY;
 
+    const camera = graph.camera();
+    const controls = graph.controls();
+
     if (t < 0.2) {
-        radius = 2000;
+        // Phase 1: Rise up from below
+        const localT = t / 0.2;
+        radius = 2500;
         x = radius;
         z = 0;
-        y = 1500 - 1500 * (t / 0.2);
+        y = 800 - 600 * localT;
         targetY = y;
 
-    } else if (t < 0.5) {
-        const localT = (t - 0.2) / 0.3;
-        radius = 2000 - 1500 * localT;
-        angle = localT * Math.PI;
+    } else if (t < 0.4) {
+        // Phase 2: Arc upward with spiraling in
+        const localT = (t - 0.2) / 0.2;
+        radius = 2500 - 1000 * localT;
+        angle = 2 * Math.PI * localT;
         x = radius * Math.cos(angle);
         z = radius * Math.sin(angle);
-        y = 200 * Math.sin(localT * Math.PI * 2);
+        y = 200 + 300 * Math.sin(localT * Math.PI);
+        targetY = 0;
+
+    } else if (t < 0.7) {
+        // Phase 3: Close orbital swoop
+        const localT = (t - 0.4) / 0.3;
+        radius = 1500 - 800 * localT;
+        angle = Math.PI + Math.PI * localT;
+        x = radius * Math.cos(angle);
+        z = radius * Math.sin(angle);
+        y = 250 + 100 * Math.sin(localT * 4 * Math.PI);
+        targetY = 0;
+
+    } else if (t < 0.9) {
+        // Phase 4: Pull back with twist
+        const localT = (t - 0.7) / 0.2;
+        radius = 700 + 1000 * localT;
+        angle = 2 * Math.PI * (1 - localT);
+        x = radius * Math.cos(angle);
+        z = radius * Math.sin(angle);
+        y = 200 + 200 * Math.cos(localT * 2 * Math.PI);
         targetY = 0;
 
     } else {
-        const localT = (t - 0.5) / 0.5;
-        radius = 500 + 1500 * localT;
-        angle = Math.PI - localT * Math.PI;
+        // Phase 5: Slowly drift into final position
+        const localT = (t - 0.9) / 0.1;
+        radius = 1700 + 300 * localT;
+        angle = 0.5 * Math.PI * localT;
         x = radius * Math.cos(angle);
         z = radius * Math.sin(angle);
-        y = 200 * Math.sin(localT * Math.PI * 2);
+        y = 200;
         targetY = 0;
     }
-
-    const camera = graph.camera();
-    const controls = graph.controls();
 
     camera.position.set(x, y, z);
     controls.target.set(0, targetY, 0);
     controls.update();
 
+    // End animation when t = 1
+    if (t >= 1) {
+        cameraAnimationDone = true;
+
+        // Enable user navigation after animation finishes
+        graph.enableNavigationControls(true);
+        graph.enableNodeDrag(true);
+    }
 
     // Animate the title
     const title = document.getElementById('big-title');

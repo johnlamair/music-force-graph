@@ -19,15 +19,11 @@ export function createGraph(containerId, data) {
     const validTypes = new Set(['artist', 'label', 'sublabel']);
 
     const nodes = data.nodes
-        .map(node => {
-            const normLabel = node.label;
-            return {
-                ...node,
-                label: normLabel,
-                color: labelColorMap[node.label] || "#95a5a6"
-            };
-        })
-        .filter(node => validTypes.has(node.type));
+        .filter(node => validTypes.has(node.type))
+        .map(node => ({
+            ...node,
+            color: labelColorMap[node.label] || "#95a5a6"
+        }));
 
     // Map node IDs to nodes for quick reference
     const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
@@ -64,8 +60,8 @@ export function createGraph(containerId, data) {
 
     // Customize link distances
     Graph.d3Force('link').distance(link => {
-        const src = typeof link.source === 'object' ? link.source : nodeMap[link.source];
-        const tgt = typeof link.target === 'object' ? link.target : nodeMap[link.target];
+        const src = link.source;
+        const tgt = link.target;
 
         if ((src.name === 'Other Labels' && tgt.type === 'sublabel') ||
             (tgt.name === 'Other Labels' && src.type === 'sublabel')) {

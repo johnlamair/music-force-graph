@@ -25,21 +25,22 @@ html, body {
 
 #big-title {
     position: fixed;
-    top: 25%; /* moved up */
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Montserrat', sans-serif;
-    font-size: 8rem;
+    font-size: 12rem; /* increased from 8rem */
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 5px;
+    letter-spacing: 3px; /* slightly tighter */
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: gradientMove 4s ease infinite;
+    animation: gradientMove 12s ease infinite;
     pointer-events: none;
     z-index: 10;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* optional bold pop */
 }
 
 @keyframes gradientMove {
