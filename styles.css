@@ -9,6 +9,8 @@ html, body {
     height: 100%;
     overflow: hidden;
     background-color: black;
+    touch-action: manipulation;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #3d-graph {
@@ -28,11 +30,10 @@ html, body {
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12rem; /* increased from 8rem */
+    font-size: 12rem;
     font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 3px; /* slightly tighter */
+    letter-spacing: 3px;
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
     background-size: 200% 200%;
     -webkit-background-clip: text;
@@ -40,7 +41,29 @@ html, body {
     animation: gradientMove 12s ease infinite;
     pointer-events: none;
     z-index: 10;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4); /* optional bold pop */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Responsive typography */
+@media (max-width: 1024px) {
+    #big-title {
+        font-size: 8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #big-title {
+        font-size: 16rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #big-title {
+        font-size: 10rem;
+        top: 30%;
+    }
 }
 
 @keyframes gradientMove {
