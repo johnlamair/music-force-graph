@@ -1,12 +1,32 @@
-# React + Vite
+# Music Industry Relationship Visualization
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About
+This project is an interactive 3D visualization of relationships in the music industry. It explores connections between artists and related entities using a large-scale dataset processed in Python and rendered using JavaScript.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Demo
 
-## Expanding the ESLint configuration
+![Demo](force-graph-demo-screenrecording.mov)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+> If the video does not play on GitHub, download and open it locally, or convert it to `.mp4` for better compatibility.
+
+---
+
+## Features
+- Interactive 3D network visualization of music industry relationships
+- Python-based processing of 900,000+ relationship records
+- JavaScript rendering for real-time exploration of connections
+- Scalable handling of large graph-style datasets
+
+---
+
+## Tech Stack
+- Python (data processing / preprocessing)
+- JavaScript (3D visualization)
+- JSON (large-scale relationship data)
+
+---
+
+## Purpose
+To visually explore and analyze complex relationships within the music industry at scale.
