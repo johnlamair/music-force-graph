@@ -7,7 +7,7 @@ This project is an interactive 3D visualization of relationships in the music in
 
 ## Demo
 
-![Demo](force-graph-demo-screenrecording.mov)
+![Demo](force-graph-screen-recording.mp4)
 
 > If the video does not play on GitHub, download and open it locally, or convert it to `.mp4` for better compatibility.
 
